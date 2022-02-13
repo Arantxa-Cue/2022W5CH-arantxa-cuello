@@ -1,25 +1,35 @@
-import { useEffect, useState } from "react";
+import { useCallback, useContext } from "react";
+import {
+  deleteCardAction,
+  loadMySeriesAction,
+} from "../store/actions/actionsCreators";
+import SeriesContext from "../store/contexts/SeriesContext";
 
-const useApi = (url) => {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
+const useApi = () => {
+  const apiURL = `https://series-isdi.herokuapp.com/series`;
+  const { dispatch } = useContext(SeriesContext);
 
-  const fetchApi = () => {
-    fetch(`https://series-isdi.herokuapp.com/series`)
-      .then((respnse) => {
-        return respnse.json();
-      })
-      .then((json) => {
-        console.log(json);
-        setLoading(false);
-        setData(json);
-      });
+  const loadSeriesAPI = useCallback(
+    async (id) => {
+      const response = await fetch(`${apiURL}/${id}`);
+      const series = await response.json();
+      dispatch(loadMySeriesAction([series]));
+    },
+    [apiURL, dispatch]
+  );
+
+  const deleteCardAPI = async (serie) => {
+    const response = await fetch(
+      `https://series-isdi.herokuapp.com/series/${serie.id}`,
+      {
+        method: "DELETE",
+      }
+    );
+    if (response.ok) {
+      dispatch(deleteCardAction(serie.id));
+    }
   };
-
-  useEffect(() => {
-    fetchApi();
-  }, []);
-  return { loading, data };
+  return { deleteCardAPI, loadSeriesAPI };
 };
 
 export default useApi;
