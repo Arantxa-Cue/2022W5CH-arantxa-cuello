@@ -1,6 +1,3 @@
-import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import SeriesContext from "../../store/contexts/SeriesContext";
 import useApi from "../../hooks/useApi";
 
 const SerieList = (id) => {
