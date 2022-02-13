@@ -1,15 +1,27 @@
 import "./styles.css";
-import useApi from "./hooks/useApi";
+import { useEffect, useState } from "react";
+import SerieList from "./components/SerieList/serieList";
+import SerieInfo from "./components/SerieInfo/serieInfo";
 
 function App() {
-  const { loading, data } = useApi(`https://series-isdi.herokuapp.com/series`);
-  if (loading) return <h1>Loading</h1>;
+  const [series, setSeries] = useState([]);
 
+  const getSeries = async () => {
+    const url = "https://series-isdi.herokuapp.com/series";
+
+    const response = await fetch(url);
+    const responseJson = await response.json();
+    setSeries(responseJson);
+  };
+
+  useEffect(() => {
+    getSeries();
+  }, []);
   return (
-    <div>
-      <h1>Data fetched successfully</h1>
-      {JSON.stringify(data)}
-    </div>
+    <>
+      <SerieInfo />
+      <SerieList series={series} />
+    </>
   );
 }
 
