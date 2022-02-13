@@ -18,14 +18,15 @@ const useApi = () => {
     [apiURL, dispatch]
   );
 
-  const deleteCardAPI = async (id) => {
-    const response = await fetch(`${apiURL}/${id}`, {
-      method: "DELETE",
-    });
+  const deleteCardAPI = async (serie) => {
+    const response = await fetch(
+      `https://series-isdi.herokuapp.com/series/${serie.id}`,
+      {
+        method: "DELETE",
+      }
+    );
     if (response.ok) {
-      dispatch(deleteCardAction(id));
-    } else {
-      throw new Error();
+      dispatch(deleteCardAction(serie.id));
     }
   };
   return { deleteCardAPI, loadSeriesAPI };
